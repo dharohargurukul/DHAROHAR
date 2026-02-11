@@ -134,24 +134,8 @@
 </div>
 
 <script>
-// 1. Pehle sounds ko select karein (Script ke shuruat mein)
 const spinAudio = document.getElementById('spinSound');
 const winAudio = document.getElementById('winSound');
-
-// 2. Button click par sound bajayein
-btn.addEventListener('click', () => {
-    // Sound play karein
-    spinAudio.currentTime = 0; 
-    spinAudio.play();
-
-    // ... aapka baaki spin wala code ...
-
-    setTimeout(() => {
-        // Jab wheel ruk jaye toh sound pause karein
-        spinAudio.pause();
-        // Agar winSound file bhi hai toh use play karein
-        if(winAudio) winAudio.play();
-    }, 5000); 
 });
 
     const canvas = document.getElementById('wheel');
