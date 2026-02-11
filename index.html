@@ -201,9 +201,11 @@
         btn.disabled = true;
         couponBox.style.display = 'none';
 
-        // Sound Play Logic
-        spinAudio.currentTime = 0;
-        spinAudio.play().catch(e => console.log("Sound play blocked by browser. Click anywhere first!"));
+        // Play spin sound
+        if (spinAudio) {
+            spinAudio.currentTime = 0;
+            spinAudio.play().catch(e => console.log("Sound play error:", e));
+        }
 
         const totalWeight = sectors.reduce((acc, s) => acc + s.weight, 0);
         let rand = Math.random() * totalWeight;
@@ -221,8 +223,9 @@
         canvas.style.transform = `rotate(${currentRotation}deg)`;
 
         setTimeout(() => {
-            spinAudio.pause();
-            if(winAudio) winAudio.play();
+            // Stop spin sound and play win sound
+            if (spinAudio) spinAudio.pause();
+            if (winAudio) winAudio.play().catch(e => console.log("Win sound play error:", e));
             
             wonCode = sectors[winnerIndex].code;
             couponBox.style.display = 'block';
