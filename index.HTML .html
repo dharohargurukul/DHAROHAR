@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dharohar | Spin & Win</title>
+    <style>
+        :root {
+            --brand-brown: #5D4037;
+            --brand-gold: #D4AF37;
+            --bg-cream: #FDFBF7;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: var(--bg-cream);
+            font-family: 'serif';
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            border: 1px solid #ddd;
+        }
+
+        .brand-logo {
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--brand-gold);
+            margin-bottom: 25px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .wheel-box {
+            position: relative;
+            width: 340px;
+            height: 340px;
+            margin: 0 auto;
+        }
+
+        .wheel-box::after {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 25px;
+            height: 25px;
+            background: #FF0000;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+            z-index: 10;
+        }
+
+        #wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            transition: transform 5s cubic-bezier(0.1, 0, 0.1, 1);
+            border: 8px solid var(--brand-brown);
+        }
+
+        #spin-btn {
+            margin-top: 30px;
+            background: var(--brand-brown);
+            color: white;
+            border: 2px solid var(--brand-gold);
+            padding: 15px 50px;
+            border-radius: 30px;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #coupon-box {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            border: 2px dashed var(--brand-gold);
+            background: #FFF9C4;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .coupon-code {
+            font-size: 26px;
+            font-weight: bold;
+            display: block;
+            margin: 10px 0;
+            color: #D32F2F;
+        }
+
+        .copy-text { font-size: 10px; color: #888; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <img src="DHAROHAR.png" alt="Logo" class="brand-logo">
+    <span class="subtitle">Spin & Win Rewards</span>
+    
+    <div class="wheel-box">
+        <canvas id="wheel" width="400" height="400"></canvas>
+    </div>
+
+    <button id="spin-btn">Spin to Win</button>
+
+    <div id="coupon-box" onclick="copyToClipboard()">
+        <span style="font-weight: bold; font-size: 12px;">CONGRATULATIONS! YOU WON:</span>
+        <span class="coupon-code" id="code-display"></span>
+        <small id="sub-text" style="display:block; margin-bottom: 5px;"></small>
+        <span class="copy-text">CLICK TO COPY CODE</span>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('wheel');
+    const ctx = canvas.getContext('2d');
+    const btn = document.getElementById('spin-btn');
+    const couponBox = document.getElementById('coupon-box');
+    
+    const logoImg = new Image();
+    logoImg.src = 'DHAROHAR.png'; // Replace with your actual logo file name
+
+    const sectors = [
+        { label: "5% OFF", weight: 350, color: "#FFEBEE", code: "DHAROHAR05" },
+        { label: "10% OFF", weight: 300, color: "#E3F2FD", code: "DHHAROHAR10" },
+        { label: "VOUCHER", weight: 200, color: "#F1F8E9", code: "NEXT10" },
+        { label: "25% OFF", weight: 20, color: "#FFF3E0", code: "LUCKY25" },
+        { label: "25% OFF", weight: 30, color: "#F3E5F5", code: "MEGA25" },
+        { label: "50% OFF", weight: 5, color: "#D4AF37", textColor: "#fff", code: "JACKPOT50" },
+        { label: "HAMPER", weight: 25, color: "#5D4037", textColor: "#fff", code: "GIFT" }
+    ];
+
+    const totalSectors = sectors.length;
+    const arc = (2 * Math.PI) / totalSectors;
+    let currentRotation = 0;
+    let wonCode = "";
+
+    function draw() {
+        ctx.clearRect(0, 0, 400, 400);
+        sectors.forEach((s, i) => {
+            const angle = i * arc;
+            ctx.beginPath();
+            ctx.fillStyle = s.color;
+            ctx.moveTo(200, 200);
+            ctx.arc(200, 200, 200, angle, angle + arc);
+            ctx.fill();
+            ctx.strokeStyle = "#fff";
+            ctx.stroke();
+
+            ctx.save();
+            ctx.translate(200 + Math.cos(angle + arc/2) * 130, 200 + Math.sin(angle + arc/2) * 130);
+            ctx.rotate(angle + arc/2 + Math.PI/2);
+            ctx.fillStyle = s.textColor || "#333";
+            ctx.font = "bold 14px Arial";
+            ctx.fillText(s.label, -ctx.measureText(s.label).width/2, 0);
+            ctx.restore();
+        });
+
+        // Center Logo Draw
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(200, 200, 45, 0, Math.PI * 2);
+        ctx.fillStyle = "#fff";
+        ctx.fill();
+        ctx.strokeStyle = "#D4AF37";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.clip();
+        try { ctx.drawImage(logoImg, 155, 155, 90, 90); } catch(e) {}
+        ctx.restore();
+    }
+    
+    logoImg.onload = draw;
+    setTimeout(draw, 500); 
+
+    btn.addEventListener('click', () => {
+        btn.disabled = true;
+        couponBox.style.display = 'none';
+
+        const totalWeight = sectors.reduce((acc, s) => acc + s.weight, 0);
+        let rand = Math.random() * totalWeight;
+        let winnerIndex = 0;
+        for (let i = 0; i < totalSectors; i++) {
+            if (rand < sectors[i].weight) { winnerIndex = i; break; }
+            rand -= sectors[i].weight;
+        }
+
+        const sectorDeg = 360 / totalSectors;
+        const extraSpins = 360 * 10;
+        const stopAngle = (270 - (winnerIndex * sectorDeg) - (sectorDeg / 2));
+        
+        currentRotation += (extraSpins + stopAngle - (currentRotation % 360)) + 3600;
+        canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+        setTimeout(() => {
+            wonCode = sectors[winnerIndex].code;
+            couponBox.style.display = 'block';
+            document.getElementById('code-display').innerText = wonCode;
+            document.getElementById('sub-text').innerText = "You unlocked: " + sectors[winnerIndex].label;
+            btn.disabled = false;
+        }, 5100);
+    });
+
+    function copyToClipboard() {
+        navigator.clipboard.writeText(wonCode).then(() => {
+            alert("Code Copy Ho Gaya: " + wonCode);
+        });
+    }
+</script>
+
+</body>
+</html>
