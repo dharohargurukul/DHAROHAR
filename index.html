@@ -113,8 +113,9 @@
     </style>
 </head>
 <body> 
- <audio id="spinSound" src="spin.mp3"></audio>
-<audio id="winSound" src="win.mp3"></audio>
+<audio id="spinSound" src="spin.mp3" preload="auto"></audio>
+<audio id="winSound" src="win.mp3" preload="auto"></audio>
+
 <div class="card">
     <img src="DHAROHAR.png" alt="Logo" class="brand-logo">
     <span class="subtitle">Spin & Win Rewards</span>
@@ -134,21 +135,19 @@
 </div>
 
 <script>
-const spinAudio = document.getElementById('spinSound');
-const winAudio = document.getElementById('winSound');
-});
-
+    const spinAudio = document.getElementById('spinSound');
+    const winAudio = document.getElementById('winSound');
     const canvas = document.getElementById('wheel');
     const ctx = canvas.getContext('2d');
     const btn = document.getElementById('spin-btn');
     const couponBox = document.getElementById('coupon-box');
     
     const logoImg = new Image();
-    logoImg.src = 'DHAROHAR.png'; // Replace with your actual logo file name
+    logoImg.src = 'DHAROHAR.png';
 
     const sectors = [
         { label: "5% OFF", weight: 350, color: "#FFEBEE", code: "DHAROHAR05" },
-        { label: "10% OFF", weight: 300, color: "#E3F2FD", code: "DHHAROHAR10" },
+        { label: "10% OFF", weight: 300, color: "#E3F2FD", code: "DHAROHAR10" },
         { label: "VOUCHER", weight: 200, color: "#F1F8E9", code: "NEXT10" },
         { label: "25% OFF", weight: 25, color: "#FFF3E0", code: "LUCKY25" },
         { label: "25% OFF", weight: 10, color: "#F3E5F5", code: "MEGA25" },
@@ -182,7 +181,6 @@ const winAudio = document.getElementById('winSound');
             ctx.restore();
         });
 
-        // Center Logo Draw
         ctx.save();
         ctx.beginPath();
         ctx.arc(200, 200, 45, 0, Math.PI * 2);
@@ -203,6 +201,10 @@ const winAudio = document.getElementById('winSound');
         btn.disabled = true;
         couponBox.style.display = 'none';
 
+        // Sound Play Logic
+        spinAudio.currentTime = 0;
+        spinAudio.play().catch(e => console.log("Sound play blocked by browser. Click anywhere first!"));
+
         const totalWeight = sectors.reduce((acc, s) => acc + s.weight, 0);
         let rand = Math.random() * totalWeight;
         let winnerIndex = 0;
@@ -219,6 +221,9 @@ const winAudio = document.getElementById('winSound');
         canvas.style.transform = `rotate(${currentRotation}deg)`;
 
         setTimeout(() => {
+            spinAudio.pause();
+            if(winAudio) winAudio.play();
+            
             wonCode = sectors[winnerIndex].code;
             couponBox.style.display = 'block';
             document.getElementById('code-display').innerText = wonCode;
