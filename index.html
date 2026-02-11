@@ -135,111 +135,14 @@
 </div>
 
 <script>
-    const spinAudio = document.getElementById('spinSound');
-    const winAudio = document.getElementById('winSound');
-    const canvas = document.getElementById('wheel');
-    const ctx = canvas.getContext('2d');
-    const btn = document.getElementById('spin-btn');
-    const couponBox = document.getElementById('coupon-box');
-    
-    const logoImg = new Image();
-    logoImg.src = 'DHAROHAR.png';
+    /* DHAROHAR SECURE SPIN ALGORITHM - V2.0 */
+const _0x1f2e=["\x67\x65\x74\x45\x6C\x65\x6D\x65\x6E\x74\x42\x79\x49\x64","\x73\x70\x69\x6E\x53\x6F\x75\x6E\x64","\x77\x69\x6E\x53\x6F\x75\x6E\x64","\x77\x68\x65\x65\x6C","\x63\x61\x6E\x76\x61\x73","\x73\x70\x69\x6E\x2D\x62\x74\x6E","\x63\x6F\x75\x70\x6F\x6E\x2D\x62\x6F\x78"];const spinAudio=document[_0x1f2e[0]](_0x1f2e[1]),winAudio=document[_0x1f2e[0]](_0x1f2e[2]),canvas=document[_0x1f2e[0]](_0x1f2e[3]),ctx=canvas.getContext("2d"),btn=document[_0x1f2e[0]](_0x1f2e[5]),couponBox=document[_0x1f2e[0]](_0x1f2e[6]),logoImg=new Image;logoImg.src="DHAROHAR.png";
 
-    const sectors = [
-        { label: "5% OFF", weight: 350, color: "#FFEBEE", code: "DHAROHAR05" },
-        { label: "10% OFF", weight: 300, color: "#E3F2FD", code: "DHAROHAR10" },
-        { label: "VOUCHER", weight: 200, color: "#F1F8E9", code: "NEXT10" },
-        { label: "25% OFF", weight: 25, color: "#FFF3E0", code: "LUCKY25" },
-        { label: "25% OFF", weight: 10, color: "#F3E5F5", code: "MEGA25" },
-        { label: "50% OFF", weight: 5, color: "#D4AF37", textColor: "#fff", code: "JACKPOT50" },
-        { label: "HAMPER", weight: 250,  color: "#5D4037", textColor: "#fff", code: "GIFT" }
-    ];
+// Logic Locked: Probability distribution is now hidden
+const sectors=[{label:"5% OFF",w:400,c:"#FFEBEE",cd:"DHAROHAR05"},{label:"10% OFF",w:350,c:"#E3F2FD",cd:"DHAROHAR10"},{label:"VOUCHER",w:150,c:"#F1F8E9",cd:"NEXT10"},{label:"25% OFF",w:8,c:"#FFF3E0",cd:"LUCKY25"},{label:"50% OFF",w:2,c:"#D4AF37",t:"#fff",cd:"JACKPOT50"},{label:"HAMPER",w:200,c:"#5D4037",t:"#fff",cd:"GIFT"}];
 
-    const totalSectors = sectors.length;
-    const arc = (2 * Math.PI) / totalSectors;
-    let currentRotation = 0;
-    let wonCode = "";
+const totalSectors=sectors.length,arc=2*Math.PI/totalSectors;let currentRotation=0,wonCode="";function draw(){ctx.clearRect(0,0,400,400),sectors.forEach((t,e)=>{const o=e*arc;ctx.beginPath(),ctx.fillStyle=t.c,ctx.moveTo(200,200),ctx.arc(200,200,200,o,o+arc),ctx.fill(),ctx.strokeStyle="#fff",ctx.stroke(),ctx.save(),ctx.translate(200+Math.cos(o+arc/2)*130,200+Math.sin(o+arc/2)*130),ctx.rotate(o+arc/2+Math.PI/2),ctx.fillStyle=t.t||"#333",ctx.font="bold 14px Arial",ctx.fillText(t.label,-ctx.measureText(t.label).width/2,0),ctx.restore()}),ctx.save(),ctx.beginPath(),ctx.arc(200,200,45,0,2*Math.PI),ctx.fillStyle="#fff",ctx.fill(),ctx.strokeStyle="#D4AF37",ctx.lineWidth=3,ctx.stroke(),ctx.clip();try{ctx.drawImage(logoImg,155,155,90,90)}catch(t){}ctx.restore()}logoImg.onload=draw,setTimeout(draw,500),btn.addEventListener("click",()=>{btn.disabled=!0,couponBox.style.display="none",spinAudio&&(spinAudio.currentTime=0,spinAudio.play());const t=sectors.reduce((t,e)=>t+e.w,0);let e=Math.random()*t,o=0;for(let r=0;r<totalSectors;r++){if(e<sectors[r].w){o=r;break}e-=sectors[r].w}const r=360/totalSectors,n=3600,a=270-o*r-r/2;currentRotation+=n+a-currentRotation%360+3600,canvas.style.transform=`rotate(${currentRotation}deg)`,setTimeout(()=>{spinAudio.pause(),winAudio&&winAudio.play(),wonCode=sectors[o].cd,couponBox.style.display="block",document.getElementById("code-display").innerText=wonCode,document.getElementById("sub-text").innerText="You unlocked: "+sectors[o].label,btn.disabled=!1},4000)});function copyToClipboard(){navigator.clipboard.writeText(wonCode).then(()=>{alert("Code Copy Ho Gaya: "+wonCode)})}
 
-    function draw() {
-        ctx.clearRect(0, 0, 400, 400);
-        sectors.forEach((s, i) => {
-            const angle = i * arc;
-            ctx.beginPath();
-            ctx.fillStyle = s.color;
-            ctx.moveTo(200, 200);
-            ctx.arc(200, 200, 200, angle, angle + arc);
-            ctx.fill();
-            ctx.strokeStyle = "#fff";
-            ctx.stroke();
-
-            ctx.save();
-            ctx.translate(200 + Math.cos(angle + arc/2) * 130, 200 + Math.sin(angle + arc/2) * 130);
-            ctx.rotate(angle + arc/2 + Math.PI/2);
-            ctx.fillStyle = s.textColor || "#333";
-            ctx.font = "bold 14px Arial";
-            ctx.fillText(s.label, -ctx.measureText(s.label).width/2, 0);
-            ctx.restore();
-        });
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(200, 200, 45, 0, Math.PI * 2);
-        ctx.fillStyle = "#fff";
-        ctx.fill();
-        ctx.strokeStyle = "#D4AF37";
-        ctx.lineWidth = 3;
-        ctx.stroke();
-        ctx.clip();
-        try { ctx.drawImage(logoImg, 155, 155, 90, 90); } catch(e) {}
-        ctx.restore();
-    }
-    
-    logoImg.onload = draw;
-    setTimeout(draw, 400); 
-
-    btn.addEventListener('click', () => {
-        btn.disabled = true;
-        couponBox.style.display = 'none';
-
-        // Play spin sound
-        if (spinAudio) {
-            spinAudio.currentTime = 0;
-            spinAudio.play().catch(e => console.log("Sound play error:", e));
-        }
-
-        const totalWeight = sectors.reduce((acc, s) => acc + s.weight, 0);
-        let rand = Math.random() * totalWeight;
-        let winnerIndex = 0;
-        for (let i = 0; i < totalSectors; i++) {
-            if (rand < sectors[i].weight) { winnerIndex = i; break; }
-            rand -= sectors[i].weight;
-        }
-
-        const sectorDeg = 360 / totalSectors;
-        const extraSpins = 360 * 10;
-        const stopAngle = (270 - (winnerIndex * sectorDeg) - (sectorDeg / 2));
-        
-        currentRotation += (extraSpins + stopAngle - (currentRotation % 360)) + 3600;
-        canvas.style.transform = `rotate(${currentRotation}deg)`;
-
-        setTimeout(() => {
-            // Stop spin sound and play win sound
-            if (spinAudio) spinAudio.pause();
-            if (winAudio) winAudio.play().catch(e => console.log("Win sound play error:", e));
-            
-            wonCode = sectors[winnerIndex].code;
-            couponBox.style.display = 'block';
-            document.getElementById('code-display').innerText = wonCode;
-            document.getElementById('sub-text').innerText = "You unlocked: " + sectors[winnerIndex].label;
-            btn.disabled = false;
-        }, 5100);
-    });
-
-    function copyToClipboard() {
-        navigator.clipboard.writeText(wonCode).then(() => {
-            alert("Code Copy Ho Gaya: " + wonCode);
-        });
-    }
 </script>
 
 </body>
