@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+DOCTYPE h<!tml>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -54,6 +54,7 @@
             width: 340px;
             height: 340px;
             margin: 0 auto;
+            perspective: 1000px;
         }
 
         .wheel-box::after {
@@ -75,6 +76,56 @@
             border-radius: 50%;
             transition: transform 4s cubic-bezier(0.1, 0, 0.1, 1);
             border: 8px solid var(--brand-brown);
+            transform-style: preserve-3d;
+            box-shadow: 
+                0 10px 40px rgba(0,0,0,0.3),
+                inset 0 0 20px rgba(0,0,0,0.2);
+            transition: transform 0.1s ease-out;
+        }
+
+        #wheel.spinning {
+            animation: wheelGlow 4s ease-in-out;
+            transition: transform 4s cubic-bezier(0.1, 0, 0.1, 1);
+        }
+
+        #wheel:not(.spinning) {
+            transition: transform 0.1s ease-out;
+        }
+
+        @keyframes wheelGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 10px 40px rgba(0,0,0,0.3),
+                    inset 0 0 20px rgba(0,0,0,0.2);
+            }
+            50% { 
+                box-shadow: 
+                    0 15px 60px rgba(212, 175, 55, 0.4),
+                    inset 0 0 30px rgba(212, 175, 55, 0.3);
+            }
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { 
+                filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.3));
+            }
+            50% { 
+                filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.8));
+            }
+        }
+
+        .wheel-box::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90px;
+            height: 90px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 5;
+            animation: logoPulse 2s ease-in-out infinite;
         }
 
         #spin-btn {
@@ -139,9 +190,48 @@
 const _0x1f2e=["\x67\x65\x74\x45\x6C\x65\x6D\x65\x6E\x74\x42\x79\x49\x64","\x73\x70\x69\x6E\x53\x6F\x75\x6E\x64","\x77\x69\x6E\x53\x6F\x75\x6E\x64","\x77\x68\x65\x65\x6C","\x63\x61\x6E\x76\x61\x73","\x73\x70\x69\x6E\x2D\x62\x74\x6E","\x63\x6F\x75\x70\x6F\x6E\x2D\x62\x6F\x78"];const spinAudio=document[_0x1f2e[0]](_0x1f2e[1]),winAudio=document[_0x1f2e[0]](_0x1f2e[2]),canvas=document[_0x1f2e[0]](_0x1f2e[3]),ctx=canvas.getContext("2d"),btn=document[_0x1f2e[0]](_0x1f2e[5]),couponBox=document[_0x1f2e[0]](_0x1f2e[6]),logoImg=new Image;logoImg.src="DHAROHAR.png";
 
 // Logic Locked: Probability distribution is now hidden
-const sectors=[{label:"5% OFF",w:400,c:"#FFEBEE",cd:"DHAROHAR05"},{label:"10% OFF",w:350,c:"#E3F2FD",cd:"DHAROHAR10"},{label:"VOUCHER",w:150,c:"#F1F8E9",cd:"NEXT10"},{label:"25% OFF",w:8,c:"#FFF3E0",cd:"LUCKY25"},{label:"50% OFF",w:2,c:"#D4AF37",t:"#fff",cd:"JACKPOT50"},{label:"HAMPER",w:200,c:"#5D4037",t:"#fff",cd:"GIFT"}];
+const sectors=[{label:"5% OFF",w:200,c:"#D2B48C",cd:"DHAROHAR05"},{label:"10% OFF",w:350,c:"#8B4513",t:"#fff",cd:"DHAROHAR10"},{label:"VOUCHER",w:200,c:"#F5DEB3",cd:"NEXT10"},{label:"20% OFF",w:20,c:"#A0522D",t:"#fff",cd:"LUCKY20"},{label:"25% OFF",w:10,c:"#D4AF37",t:"#fff",cd:"JACKPOT25"},{label:"HAMPER",w:200,c:"#5D4037",t:"#fff",cd:"GIFT"},{label:"15% OFF",w:150,c:"#DEB887",cd:"BEST15OFF"}];
 
-const totalSectors=sectors.length,arc=2*Math.PI/totalSectors;let currentRotation=0,wonCode="";function draw(){ctx.clearRect(0,0,400,400),sectors.forEach((t,e)=>{const o=e*arc;ctx.beginPath(),ctx.fillStyle=t.c,ctx.moveTo(200,200),ctx.arc(200,200,200,o,o+arc),ctx.fill(),ctx.strokeStyle="#fff",ctx.stroke(),ctx.save(),ctx.translate(200+Math.cos(o+arc/2)*130,200+Math.sin(o+arc/2)*130),ctx.rotate(o+arc/2+Math.PI/2),ctx.fillStyle=t.t||"#333",ctx.font="bold 14px Arial",ctx.fillText(t.label,-ctx.measureText(t.label).width/2,0),ctx.restore()}),ctx.save(),ctx.beginPath(),ctx.arc(200,200,45,0,2*Math.PI),ctx.fillStyle="#fff",ctx.fill(),ctx.strokeStyle="#D4AF37",ctx.lineWidth=3,ctx.stroke(),ctx.clip();try{ctx.drawImage(logoImg,155,155,90,90)}catch(t){}ctx.restore()}logoImg.onload=draw,setTimeout(draw,500),btn.addEventListener("click",()=>{btn.disabled=!0,couponBox.style.display="none",spinAudio&&(spinAudio.currentTime=0,spinAudio.play());const t=sectors.reduce((t,e)=>t+e.w,0);let e=Math.random()*t,o=0;for(let r=0;r<totalSectors;r++){if(e<sectors[r].w){o=r;break}e-=sectors[r].w}const r=360/totalSectors,n=3600,a=270-o*r-r/2;currentRotation+=n+a-currentRotation%360+3600,canvas.style.transform=`rotate(${currentRotation}deg)`,setTimeout(()=>{spinAudio.pause(),winAudio&&winAudio.play(),wonCode=sectors[o].cd,couponBox.style.display="block",document.getElementById("code-display").innerText=wonCode,document.getElementById("sub-text").innerText="You unlocked: "+sectors[o].label,btn.disabled=!1},4000)});function copyToClipboard(){navigator.clipboard.writeText(wonCode).then(()=>{alert("Code Copy Ho Gaya: "+wonCode)})}
+const totalSectors=sectors.length,arc=2*Math.PI/totalSectors;let currentRotation=0,wonCode="";function draw(){ctx.clearRect(0,0,400,400),sectors.forEach((t,e)=>{const o=e*arc;ctx.beginPath(),ctx.fillStyle=t.c,ctx.moveTo(200,200),ctx.arc(200,200,200,o,o+arc),ctx.fill(),ctx.strokeStyle="#fff",ctx.stroke(),ctx.save(),ctx.translate(200+Math.cos(o+arc/2)*130,200+Math.sin(o+arc/2)*130),ctx.rotate(o+arc/2+Math.PI/2),ctx.fillStyle=t.t||"#333",ctx.font="bold 14px Arial",ctx.fillText(t.label,-ctx.measureText(t.label).width/2,0),ctx.restore()}),ctx.save(),ctx.beginPath(),ctx.arc(200,200,45,0,2*Math.PI),ctx.fillStyle="#fff",ctx.fill(),ctx.strokeStyle="#D4AF37",ctx.lineWidth=4,ctx.shadowColor="rgba(212, 175, 55, 0.8)",ctx.shadowBlur=15,ctx.stroke(),ctx.shadowBlur=0,ctx.beginPath(),ctx.arc(200,200,42,0,2*Math.PI),ctx.strokeStyle="#8B4513",ctx.lineWidth=2,ctx.stroke(),ctx.clip();try{ctx.shadowColor="rgba(212, 175, 55, 0.5)",ctx.shadowBlur=10,ctx.drawImage(logoImg,155,155,90,90)}catch(t){}ctx.restore()}logoImg.onload=draw,setTimeout(draw,500);
+
+// Interactive 3D Effects
+function handle3DEffect(e, isTouch = false) {
+    if (canvas.classList.contains('spinning')) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    let x, y;
+    
+    if (isTouch) {
+        x = e.touches[0].clientX - rect.left;
+        y = e.touches[0].clientY - rect.top;
+    } else {
+        x = e.clientX - rect.left;
+        y = e.clientY - rect.top;
+    }
+    
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    const rotateY = ((x - centerX) / centerX) * 15;
+    const rotateX = -((y - centerY) / centerY) * 15;
+    
+    canvas.style.transform = `rotate(${currentRotation}deg) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+}
+
+function reset3DEffect() {
+    if (canvas.classList.contains('spinning')) return;
+    canvas.style.transform = `rotate(${currentRotation}deg) rotateX(0deg) rotateY(0deg)`;
+}
+
+// Mouse events
+canvas.addEventListener('mousemove', handle3DEffect);
+canvas.addEventListener('mouseleave', reset3DEffect);
+
+// Touch events for mobile
+canvas.addEventListener('touchmove', (e) => handle3DEffect(e, true));
+canvas.addEventListener('touchend', reset3DEffect);
+
+btn.addEventListener("click",()=>{if(btn.textContent==="follow us to get more coupons"){window.open("https://www.instagram.com/dharohar_ahmedabad","_blank");return}btn.disabled=!0,couponBox.style.display="none",spinAudio&&(spinAudio.currentTime=0,spinAudio.play());const t=sectors.reduce((t,e)=>t+e.w,0);let e=Math.random()*t,o=0;for(let r=0;r<totalSectors;r++){if(e<sectors[r].w){o=r;break}e-=sectors[r].w}const r=360/totalSectors,n=3600,a=270-o*r-r/2;canvas.classList.add("spinning"),currentRotation+=n+a-currentRotation%360+3600,canvas.style.transform=`rotate(${currentRotation}deg) rotateX(10deg)`,setTimeout(()=>{spinAudio.pause(),winAudio&&winAudio.play(),wonCode=sectors[o].cd,couponBox.style.display="block",document.getElementById("code-display").innerText=wonCode,document.getElementById("sub-text").innerText="You unlocked: "+sectors[o].label,btn.textContent="follow us to get more coupons",btn.disabled=!1,canvas.classList.remove("spinning"),canvas.style.transform=`rotate(${currentRotation}deg) rotateX(0deg)`},4000)});function copyToClipboard(){navigator.clipboard.writeText(wonCode).then(()=>{alert("Code Copy Ho Gaya: "+wonCode)})}
 
 </script>
 
